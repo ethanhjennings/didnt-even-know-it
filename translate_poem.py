@@ -38,6 +38,6 @@ if args.compiledfile:
     compiledfile = args.compiledfile
 
 # compile with gcc
-subprocess.call(["gcc", ccodefile,"-o",args.compiledfile])
+os.system("gcc " + ccodefile + " -o " + compiledfile)
 # run program
-os.system("./" + args.compiledfile)
+os.system("./" + compiledfile)
