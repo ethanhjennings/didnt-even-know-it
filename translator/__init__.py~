@@ -1,0 +1,79 @@
+from syllables import SyllableCounter
+import re
+
+_separatorWords = Set([''])
+
+# split apart poem into stanzas
+def _splitIntoStanzas(lines):
+    stanzas = list()
+    currentStanza = list()
+    wasLastLineEmpty = True
+    for line in lines:
+        if len(line.strip()) == 0:
+            wasLastLineEmpty = True
+            if len(currentStanza) > 0:
+                stanzas.append(currentStanza)
+        elif wasLastLineEmpty:
+            wasLastLineEmpty = False
+            currentStanza.append(line)
+            
+    # treat the eof as a stanza seperator
+    if len(currentStanza) > 0:
+        stanzas.append(currentStanza)
+        
+    return stanzas
+
+
+# generate label for one stanza
+def _generateStanzaLabel(stanzaNumber):
+    return "L" + str(stanzaNumber)
+
+
+# generate labels for all the stanzas
+def _generateLabelDict(stanzas):
+    labelDict = dict()
+    for stanzaNum, stanza in enumerate(stanzas):
+        firstLine = stanza[0]
+        firstWord = firstLine[re.search("[\s,.:]", firstLine).start():].lower()
+        labelDict[firstWord] = _generateStanzaLabel(stanzaNum)
+    return labelDict
+
+
+def _handleLine(segments):
+    
+
+def translate(lines, translator):
+    outputCode = list()
+
+    stanzas = _splitIntoStanzas(lines)
+
+    # ignore first stanza (reserved for title/author etc.)
+    stanzas = stanzas[1:]
+
+    labelDict = _generateLabelDict(stanzas)
+
+    for stanzaNum, stanza in enumerate(stanzas):
+        outputCode.append(_generateStanzaLabel(stanzaNum) + ":")
+        for line in stanza:
+            # split up line by puncuation into segments.
+            segments = re.split("[^\w\s]+", line)
+            for segmentNum, segment in enumerate(segments):
+                # split segment into inidvidual words
+                words = segment.split("[^\w-]")
+                
+                
+                
+                        
+            outputCode.append(str(words))
+        outputCode.append("")
+
+    return outputCode
+
+
+
+lines = list()
+with open("test.poem", "r") as f:
+    lines = f.readlines()
+
+for x in translate(lines):
+    print (x)

@@ -20,7 +20,7 @@ class SyllableCounter:
     def countSyllables(self, word):
         word = word.lower()
         SyllableCountVal = collections.namedtuple("SyllableCountVal",
-                                                  ['syllable_count',
+                                                  ['val',
                                                   'was_in_dictionary'])
         if word in self.syllableCountDict:
             return SyllableCountVal(self.syllableCountDict[word], True)

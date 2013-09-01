@@ -1,0 +1,22 @@
+'''
+Created on Aug 24, 2013
+
+@author: Ethan
+'''
+
+def getReg(p):
+    return "r" + p.num
+
+def addc(p): return ""
+
+def opcodeDict = {0: 'addreg',
+                  1: 'addnum'}
+
+class Instruction:
+    parameters = []
+    opcode = -1
+    def __init__(self, opcode, parameters):
+        self.parameters = parameters
+        self.opcode = opcode
+        
+    def get
