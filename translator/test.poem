@@ -1,5 +1,6 @@
 TEST
 by Ethan Jennings
 
-This is a test poem.
-Yadda, yaddity, doo pee do!
+load_immediate, r1, 5
+load_immediate, r2, 5
+add, r1, r2

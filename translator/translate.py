@@ -3,6 +3,7 @@ Created on Sep 1, 2013
 
 @author: Ethan
 '''
+
 #!/usr/bin/env python
 
 import re
@@ -58,7 +59,7 @@ def _generateLabelDict(stanzas):
         labelDict[firstWord] = _generateStanzaLabel(stanzaNum)
     return labelDict
 
-# Check if a string is an int
+# check if a string is an int
 def _isNumber(s):
     try:
         int(s)
@@ -66,11 +67,18 @@ def _isNumber(s):
     except ValueError:
         return False
 
+# load initial C code
+def _loadInitialCCode():
+    lines = list()
+    with open("translator/stack_code.c", "r") as f:
+        lines = f.read().splitlines()
+    return lines
+
 def translatePoem(lines):
     
     syllableCounter = SyllableCounter()
     
-    outputCode = list()
+    outputCode = _loadInitialCCode()
 
     stanzas = _splitIntoStanzas(lines)
     
@@ -82,8 +90,7 @@ def translatePoem(lines):
 
     labelDict = _generateLabelDict(stanzas)
     
-    outputCode.append('#include "stdio.h"')
-    outputCode.append("")
+    outputCode.append(" ")
     outputCode.append("int main()")
     outputCode.append("{")
 
@@ -104,10 +111,20 @@ def translatePoem(lines):
                 numVal = 0
                 
                 if _isNumber(words[0]):
-                    # if the first word is just a raw number, then let's use it 
+                    # the first word is just a raw number, so let's use it 
                     # directly
                     numVal = int(words[0])
+                elif instructions.isInstruction(words[0]):
+                    # the first word is an instruction so let's translate it to
+                    # an opcode
+                    numVal = instructions.getOpcodeFromIns(words[0])
+                elif (words[0].startswith('r') or words[0].startswith('l') 
+                and _isNumber(words[0][1:])):
+                    # the first word is a label or register of the form 'rN' or 'lN'
+                    # where N is an integer
+                    numVal = int(words[0][1:])
                 else:
+                    # calculate a number based on the syllables of words
                     for pos, word in enumerate(words):
                         if not syllableCounter.countSyllables(word).val % 2 == 0:
                             numVal += 2 ** (len(words) - (pos + 1))
@@ -125,9 +142,9 @@ def translatePoem(lines):
                     if not regNum in registerSet:
                         # new register, so we need to add an int define
                         registerSet.add(regNum)
-                        outputCode.append(DBL_INDENT + "int " + regVal + ";")
+                        outputCode.append(DBL_INDENT + 'Reg * ' + regVal + ' = createReg(1);')
 
-                params.append(instructions.Parameter(numVal, regVal, label,
+                params.append(instructions.Parameter(numVal, regVal, label, words[0], segment.strip(),
                                                      registerCallback))
 
             outputCode.append(DBL_INDENT + 
@@ -139,6 +156,3 @@ def translatePoem(lines):
     outputCode.append("}")
 
     return outputCode
-
-
-    

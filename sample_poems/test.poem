@@ -1,12 +1,7 @@
 TEST
 by Ethan Jennings
 
-3, 5
-1, 0, 0
-1, 1, 1
-
-4, 0
-5
-0, 0, 1
-8, 0, 5, 1
-
+_load_immediate_int, r1, 10
+_output_int, r1
+_input_string, r3
+_output_string, r3
