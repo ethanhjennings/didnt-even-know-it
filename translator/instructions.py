@@ -32,6 +32,12 @@ class Parameter:
 
     def string(self):
         return self.stringVal
+    
+    def boolean(self):
+        if self.numVal % 2 == 0:
+            return '0'
+        else:
+            return '1'
 
 opCodeMap = {
              0: '_input_int',
@@ -66,7 +72,7 @@ opCodeMap = {
              29: '_div',
              30: '_mod',
              31: '_and',
-             32: '_or',            
+             32: '_or',     
              33: '_xor',
              34: '_not',
              }
@@ -80,13 +86,21 @@ cCodeFunctionMap = {'_input_int':
                     '_input_char':
                         lambda p: 'inputChar(' +  p[0].reg() + ');',
                     '_output_int':
-                        lambda p: 'outputIntReg(' + p[0].reg() + ',' + p[0].reg() + '->pos - 1);',
+                        lambda p: 'outputIntReg(' + p[0].reg() + ',' + p[0].reg() + '->pos,0);' 
+                                  if len(p) == 1 else 
+                                  'outputIntReg(' + p[0].reg() + ',' + p[0].reg() + '->pos,' + p[1].boolean() + ');',
                     '_output_int_stack':
-                        lambda p: 'outputIntReg(' + p[0].reg() + ',0);',
+                        lambda p: 'outputIntReg(' + p[0].reg() + ',0,0);' 
+                                  if len(p) == 1 else 
+                                  'outputIntReg(' + p[0].reg() + ',0,' + p[1].boolean() + ');',
                     '_output_char':
-                        lambda p: 'outputStringReg(' + p[0].reg() + ',' + p[0].reg() + '->pos - 1);',
+                        lambda p: 'outputStringReg(' + p[0].reg() + ',' + p[0].reg() + '->pos,0);' 
+                                  if len(p) == 1 else 
+                                  'outputStringReg(' + p[0].reg() + ',' + p[0].reg() + '->pos,' + p[1].boolean() + ');',
                     '_output_string':
-                        lambda p: 'outputStringReg(' + p[0].reg() + ',0);',
+                        lambda p: 'outputStringReg(' + p[0].reg() + ',0,0);' 
+                                  if len(p) == 1 else 
+                                  'outputStringReg(' + p[0].reg() + ',0,' + p[1].boolean() + ');',
                     '_load_immediate_int':
                         lambda p: 'assignReg(' + p[0].reg() + ',' +  str(p[1].num()) + ');',
                     '_load_immediate_char':
@@ -96,17 +110,17 @@ cCodeFunctionMap = {'_input_int':
                     }
 
 numArgumentsMap = {
-                    '_input_int' : 1,
-                    '_input_string' : 1,
-                    '_input_char' : 1,
-                    '_output_int' : 1,
-                    '_output_int_stack' : 1,
-                    '_output_char' : 1,
-                    '_output_string' : 1,
-                    '_load_immediate_int' : 2,
-                    '_load_immediate_string' : 2,
-                    '_load_immediate_word' : 2,
-                    '_load_immediate_char' : 2
+                    '_input_int' : [1],
+                    '_input_string' : [1],
+                    '_input_char' : [1],
+                    '_output_int' : [1,2],
+                    '_output_int_stack' : [1,2],
+                    '_output_char' : [1,2],
+                    '_output_string' : [1,2],
+                    '_load_immediate_int' : [2],
+                    '_load_immediate_string' : [2],
+                    '_load_immediate_word' : [2],
+                    '_load_immediate_char' : [2]
                    }
 
 
@@ -117,7 +131,7 @@ def translateInstruction(opcode, parameters, lineNum):
 
     operation = opCodeMap[opcode]
 
-    if not numArgumentsMap[operation] == len(parameters):
+    if len(parameters) not in numArgumentsMap[operation]:
         raise TranslatorSyntaxError(lineNum, "for operation " + operation + " (" + "opcode " + str(opcode) + ") - given " + str(len(parameters)) + " parameters but expected " + str(numArgumentsMap[operation]))
 
     return cCodeFunctionMap[operation](parameters)

@@ -67,7 +67,7 @@ void inputString(Reg * reg)
     char * line = NULL;
     reg->size = 0;
     size_t inputlen;
-    inputlen = getline(&line,&inputlen,stdin);
+    inputlen = getline(&line,&inputlen,stdin) - 1;
     reg->data = (int*)realloc(reg->data,sizeof(int)*inputlen);
     reg->size = inputlen;
     int i;
@@ -93,7 +93,7 @@ int inputInt(Reg * reg)
     assignReg(reg, n);
 }
 
-void outputIntReg(Reg * reg, int startPos)
+void outputIntReg(Reg * reg, int startPos, int newline)
 {
     int i = startPos;
     for (;i <= reg->pos; i++)
@@ -102,13 +102,17 @@ void outputIntReg(Reg * reg, int startPos)
         if (i < reg->pos - 1) 
             printf(", ");
     }
+    if (newline)
+        printf("\n");
 }
 
-void outputStringReg(Reg * reg, int startPos)
+void outputStringReg(Reg * reg, int startPos, int newline)
 {
     int i = startPos;
     for (;i <= reg->pos; i++)
     {
         printf("%c",(char)reg->data[i]);
-    }   
+    }
+    if (newline)
+        printf("\n");
 }

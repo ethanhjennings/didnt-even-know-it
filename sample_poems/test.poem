@@ -2,6 +2,7 @@ TEST
 by Ethan Jennings
 
 _load_immediate_int, r1, 10
-_output_int, r1
+_output_int, r1, 1
 _input_string, r3
-_output_string, r3
+_output_string, r3, 
+_output_string, r3,
