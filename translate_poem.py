@@ -31,13 +31,13 @@ try:
             f.write(x + '\n')
 except translator.TranslatorSyntaxError as e:
     print (e)
+else:
+    compiledfile = "output"
 
-compiledfile = "output"
+    if args.compiledfile:
+        compiledfile = args.compiledfile
 
-if args.compiledfile:
-    compiledfile = args.compiledfile
-
-# compile with gcc
-os.system("gcc " + ccodefile + " -o " + compiledfile)
-# run program
-os.system("./" + compiledfile)
+    # compile with gcc
+    os.system("gcc " + ccodefile + " -o " + compiledfile)
+    # run program
+    os.system("./" + compiledfile)

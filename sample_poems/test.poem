@@ -1,8 +1,9 @@
 TEST
 by Ethan Jennings
 
-_load_immediate_int, r1, 10
-_output_int, r1, 1
-_input_string, r3
-_output_string, r3, 
-_output_string, r3,
+_input_string, r1
+
+_pop, r1, r3, r4
+_push, r2, r3
+_jump_positive, r4, l1
+_output_string, r2

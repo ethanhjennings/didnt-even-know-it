@@ -93,26 +93,39 @@ int inputInt(Reg * reg)
     assignReg(reg, n);
 }
 
-void outputIntReg(Reg * reg, int startPos, int newline)
+void outputIntReg(Reg * reg, int startPos, int noNewline)
 {
     int i = startPos;
     for (;i <= reg->pos; i++)
     {
         printf("%d",reg->data[i]);
-        if (i < reg->pos - 1) 
+        if (i <= reg->pos - 1) 
             printf(", ");
     }
-    if (newline)
+    if (!noNewline)
         printf("\n");
 }
 
-void outputStringReg(Reg * reg, int startPos, int newline)
+void outputStringReg(Reg * reg, int startPos, int noNewline)
 {
     int i = startPos;
     for (;i <= reg->pos; i++)
     {
         printf("%c",(char)reg->data[i]);
     }
-    if (newline)
+    if (!noNewline)
         printf("\n");
+}
+
+int stackEqual(Reg * reg1, Reg * reg2)
+{
+    if (reg1->pos != reg2->pos)
+        return 1;
+    int i;
+    for (i = 0; i < reg1->pos; i++)
+    {
+        if (reg1->data[i] != reg2->data[i])
+            return 1;
+    }
+    return 0;
 }

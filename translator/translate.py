@@ -78,7 +78,8 @@ def translatePoem(lines):
     
     syllableCounter = SyllableCounter()
     
-    outputCode = _loadInitialCCode()
+    outputCode = list()
+    headerCode = _loadInitialCCode()
 
     stanzas = _splitIntoStanzas(lines)
     
@@ -90,9 +91,9 @@ def translatePoem(lines):
 
     labelDict = _generateLabelDict(stanzas)
     
-    outputCode.append(" ")
-    outputCode.append("int main()")
-    outputCode.append("{")
+    headerCode.append(" ")
+    headerCode.append("int main()")
+    headerCode.append("{")
 
     for stanzaNum, stanza in enumerate(stanzas):
         outputCode.append(INDENT + _generateStanzaLabel(stanzaNum) + ": ;")
@@ -140,9 +141,9 @@ def translatePoem(lines):
                 # callback that will be called every time a register is accessed
                 def registerCallback(regNum, regVal):
                     if not regNum in registerSet:
-                        # new register, so we need to add an int define
+                        # new register, so we need to define it at the top
                         registerSet.add(regNum)
-                        outputCode.append(DBL_INDENT + 'Reg * ' + regVal + ' = createReg(1);')
+                        headerCode.append(DBL_INDENT + 'Reg * ' + regVal + ' = createReg(1);')
 
                 params.append(instructions.Parameter(numVal, regVal, label, words[0], segment.strip(),
                                                      registerCallback))
@@ -151,8 +152,11 @@ def translatePoem(lines):
                 instructions.translateInstruction(
                     params[0].num(),
                     params[1:],
+                    line,
                     line.num))
 
     outputCode.append("}")
+
+    outputCode = headerCode + outputCode
 
     return outputCode
