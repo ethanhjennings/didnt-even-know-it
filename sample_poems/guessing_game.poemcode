@@ -1,0 +1,24 @@
+Guessing Game
+By: Ethan Jennings
+
+_load_immediate_int, r5, 101
+_random, r2, r5
+
+_load_immediate_string, r6, "Guess: "
+_output_string, r6, 1
+_input_int, r1
+_jump_less, r1, r2, l2
+_jump_greater, r1, r2, l3
+_jump_equal, r1, r2, l4
+
+_load_immediate_string, r6, "Too low."
+_output_string, r6
+_jump, l1
+
+_load_immediate_string, r6, "Too High."
+_output_string, r6
+_jump, l1
+
+_load_immediate_string, r6, "You win!"
+_output_string, r6
+_jump, l0

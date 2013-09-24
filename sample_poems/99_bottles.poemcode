@@ -1,0 +1,21 @@
+99 Bottles
+By: Ethan Jenings
+
+_load_immediate_string, r1, " bottles of beer,"
+_load_immediate_string, r2, " bottles of beer on the wall, "
+_load_immediate_string, r3, "Take one down and pass it around, "
+_load_immediate_int, r4, 32
+_load_immediate_int, r5, 99
+
+_output_int, r5, 1
+_output_string, r2, 1
+_output_int, r5, 1
+_output_string, r1
+_output_string, r3, 1
+_sub, r5
+_output_int, r5, 1
+_output_string, r2
+_newline
+_jump_positive, r5, l1
+
+

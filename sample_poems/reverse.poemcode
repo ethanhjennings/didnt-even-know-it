@@ -1,0 +1,9 @@
+TEST
+by Ethan Jennings
+
+_input_string, r1
+
+_pop, r1, r3, r4
+_push, r2, r3
+_jump_positive, r4, l1
+_output_string, r2
